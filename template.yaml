@@ -1,0 +1,77 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: lambda-s3-event-sam
+
+Parameters:
+  SourceBucketName:
+    Type: String
+    Default: 'mgustavo-source-files-bucket'
+  DestinationBucketName:
+    Type: String
+    Default: 'mgustavo-destination-files-bucket'
+  FilesPath:
+    Type: String
+    Default: 'files'
+  CacheControl:
+    Type: String
+    Default: max-age=31536000,public
+  MetadataDirective:
+    Type: String
+    Default: REPLACE
+
+Globals:
+  Function:
+    Timeout: 3
+    MemorySize: 128
+
+Resources:
+  SourceBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Ref SourceBucketName
+  DestinationBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Ref DestinationBucketName
+  CreateDatePrefixedFiles:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: CreateDatePrefixedFiles
+      CodeUri: dist/src/functions/create-date-prefixed-files
+      Handler: handler.handler
+      Runtime: nodejs14.x
+      Policies:
+        - S3CrudPolicy:
+            BucketName: !Ref SourceBucketName
+        - S3CrudPolicy:
+            BucketName: !Ref DestinationBucketName
+      Environment:
+        Variables:
+          FILE_PATH: !Ref FilesPath
+          DESTINATION_BUCKET_NAME: !Ref DestinationBucketName
+          CACHE_CONTROL: !Ref CacheControl
+          METADATA_DIRECTIVE: !Ref MetadataDirective
+      Events:
+        TxtUpload:
+          Type: S3
+          Properties:
+            Bucket: !Ref SourceBucket
+            Events: s3:ObjectCreated:*
+            Filter: 
+              S3Key:
+                Rules:
+                  - Name: prefix
+                    Value: !Ref FilesPath
+                  - Name: suffix
+                    Value: '.txt'
+
+Outputs:
+  FunctionArn:
+    Value: !GetAtt CreateDatePrefixedFiles.Arn
+    Description: CreateDatePrefixedFiles function Arn
+  SourceBucketArn:
+    Value: !GetAtt SourceBucket.Arn
+    Description: Source Bucket Arn
+  DestinationBucketArn:
+    Value: !GetAtt DestinationBucket.Arn
+    Description: Destination Bucket Arn

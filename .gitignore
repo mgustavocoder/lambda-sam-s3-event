@@ -1,0 +1,7 @@
+node_modules
+samconfig.toml
+dist
+.aws-sam
+.vscode
+coverage
+**/**/.terraform.lock.hcl
