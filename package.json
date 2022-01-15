@@ -15,7 +15,8 @@
     "lint": "npx eslint 'src/**'",
     "test": "jest -i ./tests --detectOpenHandles --silent=false",
     "test:coverage": "jest -i ./tests --detectOpenHandles --silent=false --coverage",
-    "test:watch": "jest -i ./tests --detectOpenHandles --silent=false --watchAll"
+    "test:watch": "jest -i ./tests --detectOpenHandles --silent=false --watchAll",
+    "prepare": "husky install"
   },
   "devDependencies": {
     "@types/aws-lambda": "^8.10.84",
