@@ -1,4 +1,4 @@
-# AWS Lambda function triggered by AWS S3 Event example with SAM.
+# Example AWS Lambda function triggered by AWS S3 Event with SAM.
 
 This is an example of how to trigger an AWS Lambda Function with an S3 event.
 
