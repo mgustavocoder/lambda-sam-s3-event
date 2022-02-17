@@ -1,7 +1,7 @@
 {
   "name": "lambda-s3-event-sam",
   "version": "1.0.0",
-  "description": "AWS Lambda function triggered by AWS S3 Event example with SAM.",
+  "description": "Example of an AWS Lambda function triggered by AWS S3 Event with SAM.",
   "repository": "",
   "author": "mgustavocoder@gmail.com",
   "engines": {
